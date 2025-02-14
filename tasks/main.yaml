@@ -27,26 +27,27 @@
 - name: Install Gitolite
   block:
     - name: Check if the Operating System is supported
-      fail:
+      ansible.builtin.fail:
         msg: "Operating System family is not supported: {{ ansible_os_family }}"
       when: ansible_os_family not in ["Debian", "RedHat"]
 
     - name: Install Gitolite on Debian-based Systems
-      apt:
+      ansible.builtin.apt:
         name: gitolite3
       when: ansible_os_family == "Debian"
 
     - name: Install Gitolite on RedHat-based Systems
-      yum: name=gitolite3
+      ansible.builtin.dnf:
+        name: gitolite3
       when: ansible_os_family == "RedHat"
 
     - name: Create Gitolite system group
-      group:
+      ansible.builtin.group:
         name: "{{ gitolite_group }}"
         system: true
 
     - name: Create Gitolite system user
-      user:
+      ansible.builtin.user:
         name: "{{ gitolite_user }}"
         group: "{{ gitolite_group }}"
         home: "{{ gitolite_home }}"
@@ -55,49 +56,49 @@
         system: true
 
     - name: Ensure Gitolite home directory exists with proper permissions
-      file:
+      ansible.builtin.file:
         state: directory
         path: "{{ gitolite_home }}"
         owner: "{{ gitolite_user }}"
         group: "{{ gitolite_group }}"
-        mode: 0700
+        mode: "0700"
 
 - name: Configure Gitolite SSH key
   block:
     - name: Generate Gitolite SSH key pair if it does not exist
       become: true
       become_user: "{{ gitolite_user }}"
-      command: ssh-keygen -t rsa -b 4096 -f {{ gitolite_ssh_key_path | quote }} -N ""
+      ansible.builtin.command: ssh-keygen -t rsa -b 4096 -f {{ gitolite_ssh_key_path | quote }} -N ""
       args:
         creates: "{{ gitolite_ssh_key_path }}"
 
     - name: Set permissions for the Gitolite .ssh directory
-      file:
+      ansible.builtin.file:
         path: "{{ gitolite_ssh_directory }}"
         owner: "{{ gitolite_user }}"
         group: "{{ gitolite_user }}"
-        mode: 0700
+        mode: "0700"
 
     - name: Set permissions for the SSH public key
-      file:
+      ansible.builtin.file:
         path: "{{ gitolite_ssh_key_path }}.pub"
         owner: "{{ gitolite_user }}"
         group: "{{ gitolite_user }}"
-        mode: 0644
+        mode: "0644"
 
     - name: Set permissions for the SSH private key
-      file:
+      ansible.builtin.file:
         path: "{{ gitolite_ssh_key_path }}"
         owner: "{{ gitolite_user }}"
         group: "{{ gitolite_user }}"
-        mode: 0600
+        mode: "0600"
 
 - name: Setup Gitolite
   block:
     - name: Initialize Gitolite with the admin public key
       become: true
       become_user: "{{ gitolite_user }}"
-      command:
+      ansible.builtin.command:
         argv:
           - "gitolite"
           - "setup"
@@ -105,3 +106,12 @@
           - "{{ gitolite_ssh_public_key_path }}"
       args:
         creates: /var/lib/gitolite/repositories/gitolite-admin.git
+
+# - name: Gitolite fix (Backward compatibility)
+#   when: ansible_os_family == "Debian"
+#   ansible.builtin.file:
+#     state: link
+#     dest: "/usr/lib/gitolite"
+#     src: "/usr/share/gitolite3"
+#     owner: root
+#     group: root
