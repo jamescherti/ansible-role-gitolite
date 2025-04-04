@@ -5,7 +5,7 @@ The ansible-role-gitolite Ansible automates the installation and configuration o
 
 ## Requirements
 
-- Operating system: Debian-based (e.g., Ubuntu, Mint) or RedHat-based (e.g., CentOS, Fedora)
+- Operating system: Debian-based (e.g., Ubuntu, Mint), RedHat-based (e.g., CentOS, Fedora), or Arch Linux
 
 ## Author and license
 
