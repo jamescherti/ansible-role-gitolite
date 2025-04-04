@@ -29,7 +29,13 @@
     - name: Check if the Operating System is supported
       ansible.builtin.fail:
         msg: "Operating System family is not supported: {{ ansible_os_family }}"
-      when: ansible_os_family not in ["Debian", "RedHat"]
+      when: ansible_os_family not in ["Debian", "RedHat", "Archlinux"]
+
+    - name: Pacman install extra/gitolite
+      when: ansible_os_family == "Archlinux"
+      community.general.pacman:
+        name:
+          - extra/gitolite
 
     - name: Install Gitolite on Debian-based Systems
       ansible.builtin.apt:
@@ -107,11 +113,12 @@
       args:
         creates: /var/lib/gitolite/repositories/gitolite-admin.git
 
-# - name: Gitolite fix (Backward compatibility)
-#   when: ansible_os_family == "Debian"
-#   ansible.builtin.file:
-#     state: link
-#     dest: "/usr/lib/gitolite"
-#     src: "/usr/share/gitolite3"
-#     owner: root
-#     group: root
+# Backward compatibility with Debian
+- name: Gitolite fix (Backward compatibility)
+  when: ansible_os_family == "Archlinux"
+  ansible.builtin.file:
+    state: link
+    dest: "/usr/share/gitolite3"
+    src: "/usr/lib/gitolite"
+    owner: root
+    group: root
