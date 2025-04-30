@@ -112,13 +112,3 @@
           - "{{ gitolite_ssh_public_key_path }}"
       args:
         creates: /var/lib/gitolite/repositories/gitolite-admin.git
-
-# Backward compatibility with Debian
-- name: Gitolite fix (Backward compatibility)
-  when: ansible_os_family == "Archlinux"
-  ansible.builtin.file:
-    state: link
-    dest: "/usr/share/gitolite3"
-    src: "/usr/lib/gitolite"
-    owner: root
-    group: root
