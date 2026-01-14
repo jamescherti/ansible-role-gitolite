@@ -9,7 +9,7 @@ The [ansible-role-gitolite](https://github.com/jamescherti/ansible-role-gitolite
 
 ## Author and License
 
-Copyright (C) 2024-2025 [James Cherti](https://www.jamescherti.com).
+Copyright (C) 2024-2026 [James Cherti](https://www.jamescherti.com).
 
 Distributed under terms of the MIT license.
 
