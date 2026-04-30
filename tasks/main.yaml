@@ -28,11 +28,11 @@
   block:
     - name: Check if the Operating System is supported
       ansible.builtin.fail:
-        msg: "Operating System family is not supported: {{ ansible_os_family }}"
-      when: ansible_os_family not in ["Debian", "RedHat", "Archlinux"]
+        msg: "Operating System family is not supported: {{ ansible_facts.os_family }}"
+      when: ansible_facts.os_family not in ["Debian", "RedHat", "Archlinux"]
 
     - name: Pacman install extra/gitolite
-      when: ansible_os_family == "Archlinux"
+      when: ansible_facts.os_family == "Archlinux"
       community.general.pacman:
         name:
           - extra/gitolite
@@ -40,12 +40,12 @@
     - name: Install Gitolite on Debian-based Systems
       ansible.builtin.apt:
         name: gitolite3
-      when: ansible_os_family == "Debian"
+      when: ansible_facts.os_family == "Debian"
 
     - name: Install Gitolite on RedHat-based Systems
       ansible.builtin.dnf:
         name: gitolite3
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts.os_family == "RedHat"
 
     - name: Create Gitolite system group
       ansible.builtin.group:
