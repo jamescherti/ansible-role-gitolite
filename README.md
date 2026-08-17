@@ -1,4 +1,4 @@
-# ansible-role-gitolite
+# ansible-role-gitolite - An Ansible role that automates the installation and configuration of Gitolite, a Git repository management system
 ![License](https://img.shields.io/github/license/jamescherti/ansible-role-gitolite)
 
 The [ansible-role-gitolite](https://github.com/jamescherti/ansible-role-gitolite) Ansible role automates the installation and configuration of Gitolite, a Git repository management system. It facilitates the setup of Gitolite on remote servers, including user access control and repository creation, ensuring a consistent and reproducible deployment.
